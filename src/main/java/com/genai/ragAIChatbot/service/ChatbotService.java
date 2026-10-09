@@ -22,12 +22,11 @@ public class ChatbotService {
 
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
-    private final EmbeddingModel embeddingModel;
-    public ChatbotService(VectorStore vectorStore, ChatClient.Builder chatClientBuilder, @Qualifier("googleGenAiTextEmbedding") EmbeddingModel embeddingModel) {
+
+    public ChatbotService(VectorStore vectorStore, ChatClient.Builder chatClientBuilder) {
 
         this.chatClient = chatClientBuilder.build();
         this.vectorStore = vectorStore;
-        this.embeddingModel = embeddingModel;
     }
 
     @Value("classpath*:/knowledge/*.pdf")
