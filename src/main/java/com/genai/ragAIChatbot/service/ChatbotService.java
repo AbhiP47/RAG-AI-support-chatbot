@@ -7,6 +7,7 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,10 +23,10 @@ public class ChatbotService {
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
     private final EmbeddingModel embeddingModel;
-    public ChatbotService(ChatClient chatClient, VectorStore vectorStore, ChatClient chatClient1, VectorStore vectorStore1, @Qualifier("googleGenAiTextEmbedding") EmbeddingModel embeddingModel) {
+    public ChatbotService(VectorStore vectorStore, ChatClient.Builder chatClientBuilder, @Qualifier("googleGenAiTextEmbedding") EmbeddingModel embeddingModel) {
 
-        this.chatClient = chatClient1;
-        this.vectorStore = vectorStore1;
+        this.chatClient = chatClientBuilder.build();
+        this.vectorStore = vectorStore;
         this.embeddingModel = embeddingModel;
     }
 
@@ -41,6 +42,7 @@ public class ChatbotService {
                 .withChunkSize(300)
                 .build();
 
+        // Loop through each PDF File
         for(Resource resource : policyFiles)
         {
             PagePdfDocumentReader reader = new PagePdfDocumentReader(resource);
@@ -50,5 +52,49 @@ public class ChatbotService {
         }
 
         vectorStore.add(allChunks);
+    }
+
+    public String answerUserQuery(String question) {
+        // 1. Question --> vector
+        // 2. similarity search in our vector DB
+        // 3. top 4 results fetch
+
+        List<Document> relevantChunks = vectorStore.similaritySearch(
+                SearchRequest.builder()
+                        .query(question)
+                        .topK(4)
+                        .build()
+        );
+
+        StringBuilder context = new StringBuilder();
+
+        for (Document document : relevantChunks) {
+
+            context.append(document.getText())
+                    .append("\n\n");
+        }
+
+        String finalContext = context.toString();
+
+        String prompt = """
+                You are an AI customer support assistant for our e-commerce company.
+
+                Answer the customer using ONLY the company information provided below.
+
+                If the answer is not available in the provided information, say:
+                "I don't have that information in the company documents."
+                
+                COMPANY INFORMATION:
+                <company_context>
+                %s
+                </company_context>
+                """.formatted(context);
+
+        return chatClient
+                .prompt()
+                .system(prompt)
+                .user(question)
+                .call()
+                .content();
     }
 }
