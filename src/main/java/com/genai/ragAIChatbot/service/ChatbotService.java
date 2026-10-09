@@ -33,7 +33,6 @@ public class ChatbotService {
     @Value("classpath*:/knowledge/*.pdf")
     private Resource[] policyFiles;
 
-    @PostConstruct
     public void loadKnowledgeBase()
     {
         List<Document> allChunks = new ArrayList<>();
