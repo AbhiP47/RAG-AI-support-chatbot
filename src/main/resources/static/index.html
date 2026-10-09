@@ -5,199 +5,740 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShopSphere Support</title>
     <style>
-        * { box-sizing: border-box; }
+        :root {
+            color-scheme: light;
+            --ink: #111827;
+            --muted: #64748b;
+            --soft: #f8fafc;
+            --panel: rgba(255, 255, 255, 0.86);
+            --line: rgba(148, 163, 184, 0.32);
+            --brand: #ff9900;
+            --brand-dark: #a65f00;
+            --navy: #111827;
+            --teal: #0f766e;
+            --green: #16a34a;
+            --danger: #b42318;
+            --shadow: 0 24px 80px rgba(15, 23, 42, 0.22);
+            --radius: 28px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+        }
 
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #eaeded;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, Helvetica, sans-serif;
+            color: var(--ink);
+            background:
+                    radial-gradient(circle at top left, rgba(255, 153, 0, 0.26), transparent 36rem),
+                    radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.18), transparent 34rem),
+                    linear-gradient(135deg, #f8fafc 0%, #edf2f7 42%, #f5f7fb 100%);
+            display: grid;
+            place-items: center;
+            padding: 28px;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .page-shell {
+            width: min(1180px, 100%);
+            display: grid;
+            grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.8fr);
+            gap: 22px;
+            align-items: stretch;
+        }
+
+        .insight-panel,
+        .chat-app {
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            background: var(--panel);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(22px);
+        }
+
+        .insight-panel {
+            border-radius: var(--radius);
+            padding: 24px;
+            min-height: 720px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .brand-mark {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--brand), #ffd166);
+            color: #172033;
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            font-weight: 900;
+            box-shadow: 0 16px 34px rgba(255, 153, 0, 0.28);
+        }
+
+        .kicker {
+            margin: 22px 0 8px;
+            color: var(--teal);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .insight-panel h1 {
+            margin: 0;
+            max-width: 13ch;
+            font-size: clamp(34px, 4vw, 54px);
+            line-height: 0.98;
+            letter-spacing: 0;
+        }
+
+        .insight-panel p {
+            margin: 18px 0 0;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.65;
+        }
+
+        .trust-stack {
+            display: grid;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .trust-item {
+            display: grid;
+            grid-template-columns: 38px 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .trust-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            background: #ecfeff;
+            color: var(--teal);
+            font-weight: 900;
+        }
+
+        .trust-item strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .trust-item span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .side-footer {
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 24px;
-            color: #111;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .pulse {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--green);
+            box-shadow: 0 0 0 8px rgba(22, 163, 74, 0.12);
+            flex: 0 0 auto;
         }
 
         .chat-app {
-            width: min(900px, 100%);
-            height: min(760px, 88vh);
-            background: white;
-            border-radius: 16px;
+            height: min(780px, calc(100vh - 56px));
+            min-height: 650px;
+            border-radius: var(--radius);
             overflow: hidden;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
             display: flex;
             flex-direction: column;
         }
 
         .header {
-            background: #131921;
+            background:
+                    linear-gradient(135deg, rgba(17, 24, 39, 0.98), rgba(30, 41, 59, 0.98)),
+                    linear-gradient(90deg, rgba(255, 153, 0, 0.22), transparent);
             color: white;
-            padding: 18px 22px;
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .header-main {
             display: flex;
             align-items: center;
             gap: 14px;
+            min-width: 0;
         }
 
         .logo {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #ff9900;
-            color: #131921;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #ff9900, #ffd166);
+            color: #111827;
             display: grid;
             place-items: center;
-            font-weight: bold;
-            font-size: 20px;
+            font-weight: 900;
+            font-size: 21px;
+            flex: 0 0 auto;
         }
 
-        .header h1 {
+        .header h2 {
             font-size: 18px;
-            margin: 0 0 3px;
+            margin: 0 0 4px;
+            letter-spacing: 0;
         }
 
         .header p {
             margin: 0;
             font-size: 13px;
-            color: #d5d9d9;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .header-badge {
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
         .status-dot {
             width: 9px;
             height: 9px;
             border-radius: 50%;
-            background: #00a650;
+            background: #22c55e;
             display: inline-block;
-            margin-right: 5px;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.16);
+            flex: 0 0 auto;
         }
 
         .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 24px;
+            padding: 26px;
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            background: #f7f8f8;
+            gap: 16px;
+            background:
+                    linear-gradient(rgba(248, 250, 252, 0.92), rgba(248, 250, 252, 0.92)),
+                    repeating-linear-gradient(135deg, rgba(148, 163, 184, 0.15) 0 1px, transparent 1px 18px);
+            scroll-behavior: smooth;
+        }
+
+        .welcome-card {
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.88);
+            padding: 22px;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        .welcome-card h3 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 0;
+        }
+
+        .welcome-card p {
+            margin: 10px 0 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .capabilities {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .capability {
+            min-height: 92px;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            border-radius: 18px;
+            background: #ffffff;
+            padding: 13px;
+        }
+
+        .capability strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .capability span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .message-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .message-row.user {
+            justify-content: flex-end;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            font-size: 12px;
+            font-weight: 900;
+            flex: 0 0 auto;
+        }
+
+        .assistant-avatar {
+            background: #e0f2fe;
+            color: #075985;
         }
 
         .message {
-            max-width: 76%;
-            padding: 13px 16px;
-            border-radius: 16px;
-            line-height: 1.45;
+            max-width: min(72%, 680px);
+            padding: 14px 16px;
+            border-radius: 20px;
+            line-height: 1.55;
             font-size: 15px;
             white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            position: relative;
         }
 
         .assistant {
             align-self: flex-start;
-            background: white;
-            border: 1px solid #ddd;
-            border-bottom-left-radius: 4px;
+            background: #ffffff;
+            border: 1px solid rgba(148, 163, 184, 0.32);
+            border-bottom-left-radius: 7px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+        }
+
+        .assistant:not(.typing)::after {
+            content: "Grounded answer";
+            display: block;
+            width: fit-content;
+            margin-top: 10px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #ecfdf5;
+            color: #047857;
+            font-size: 11px;
+            font-weight: 800;
         }
 
         .user {
             align-self: flex-end;
-            background: #232f3e;
+            background: linear-gradient(135deg, #111827, #334155);
             color: white;
-            border-bottom-right-radius: 4px;
+            border-bottom-right-radius: 7px;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18);
+        }
+
+        .typing {
+            color: #475569;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-style: normal;
+        }
+
+        .typing::before {
+            content: "";
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 3px solid #dbeafe;
+            border-top-color: var(--teal);
+            animation: spin 0.9s linear infinite;
+            flex: 0 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .quick-questions {
-            padding: 12px 18px 0;
-            background: white;
+            padding: 14px 20px 4px;
+            background: rgba(255, 255, 255, 0.92);
             display: flex;
-            gap: 8px;
+            gap: 10px;
             overflow-x: auto;
+            border-top: 1px solid rgba(148, 163, 184, 0.18);
         }
 
         .quick-questions button {
             white-space: nowrap;
-            border: 1px solid #ff9900;
+            border: 1px solid rgba(255, 153, 0, 0.45);
             color: #7a4a00;
-            background: #fff8e8;
+            background: linear-gradient(180deg, #fff8e8, #fff3cf);
             border-radius: 999px;
-            padding: 8px 12px;
+            padding: 10px 14px;
             cursor: pointer;
+            font-size: 13px;
+            font-weight: 800;
+            transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
         }
 
-        .composer {
-            background: white;
-            border-top: 1px solid #ddd;
-            padding: 16px 18px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .composer input {
-            flex: 1;
-            border: 1px solid #aab7b8;
-            border-radius: 10px;
-            padding: 13px 14px;
-            font-size: 15px;
+        .quick-questions button:hover,
+        .quick-questions button:focus-visible {
+            border-color: var(--brand);
+            box-shadow: 0 8px 20px rgba(255, 153, 0, 0.18);
+            transform: translateY(-1px);
             outline: none;
         }
 
-        .composer input:focus {
-            border-color: #ff9900;
-            box-shadow: 0 0 0 2px rgba(255, 153, 0, 0.18);
+        .composer {
+            background: rgba(255, 255, 255, 0.96);
+            border-top: 1px solid rgba(148, 163, 184, 0.28);
+            padding: 16px 20px 20px;
+        }
+
+        .composer-inner {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border: 1px solid rgba(100, 116, 139, 0.32);
+            border-radius: 20px;
+            padding: 8px;
+            background: #ffffff;
+            box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
+        }
+
+        .input-wrap {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .composer input {
+            width: 100%;
+            border: 0;
+            padding: 12px 12px;
+            font-size: 15px;
+            color: var(--ink);
+            outline: none;
+            background: transparent;
+        }
+
+        .composer-inner:focus-within {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.16), 0 12px 36px rgba(15, 23, 42, 0.08);
         }
 
         .composer button {
             border: 0;
-            border-radius: 10px;
-            background: #ff9900;
-            color: #111;
-            font-weight: bold;
-            padding: 0 22px;
+            border-radius: 15px;
+            min-height: 46px;
+            padding: 0 20px;
+            background: linear-gradient(135deg, var(--brand), #ffc04d);
+            color: #111827;
+            font-weight: 900;
             cursor: pointer;
+            box-shadow: 0 12px 26px rgba(255, 153, 0, 0.24);
+            transition: transform 160ms ease, opacity 160ms ease;
+            flex: 0 0 auto;
+        }
+
+        .composer button:hover,
+        .composer button:focus-visible {
+            transform: translateY(-1px);
+            outline: none;
         }
 
         .composer button:disabled {
-            opacity: 0.6;
+            opacity: 0.62;
             cursor: wait;
+            transform: none;
         }
 
-        .typing {
-            color: #666;
-            font-style: italic;
+        .composer-note {
+            margin: 10px 8px 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.4;
         }
 
-        @media (max-width: 600px) {
-            body { padding: 0; }
-            .chat-app { height: 100vh; border-radius: 0; }
-            .message { max-width: 88%; }
-            .composer button { padding: 0 16px; }
+        @media (max-width: 920px) {
+            body {
+                padding: 16px;
+                place-items: stretch;
+            }
+
+            .page-shell {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .insight-panel {
+                min-height: auto;
+                border-radius: 24px;
+                padding: 20px;
+            }
+
+            .insight-panel h1 {
+                max-width: none;
+                font-size: 34px;
+            }
+
+            .trust-stack {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .side-footer {
+                display: none;
+            }
+
+            .chat-app {
+                height: min(760px, calc(100vh - 240px));
+                min-height: 560px;
+                border-radius: 24px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 0;
+                background: #f8fafc;
+            }
+
+            .page-shell {
+                min-height: 100vh;
+                gap: 0;
+            }
+
+            .insight-panel {
+                display: none;
+            }
+
+            .chat-app {
+                height: 100vh;
+                min-height: 100vh;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .header {
+                padding: 16px;
+            }
+
+            .header-badge {
+                display: none;
+            }
+
+            .logo {
+                width: 42px;
+                height: 42px;
+                border-radius: 14px;
+            }
+
+            .messages {
+                padding: 18px 14px;
+                gap: 14px;
+            }
+
+            .welcome-card {
+                padding: 18px;
+                border-radius: 20px;
+            }
+
+            .welcome-card h3 {
+                font-size: 19px;
+            }
+
+            .capabilities {
+                grid-template-columns: 1fr;
+            }
+
+            .message {
+                max-width: 86%;
+                font-size: 14px;
+            }
+
+            .avatar {
+                width: 30px;
+                height: 30px;
+                border-radius: 11px;
+            }
+
+            .quick-questions {
+                padding: 12px 14px 4px;
+            }
+
+            .composer {
+                padding: 12px 12px 14px;
+            }
+
+            .composer-inner {
+                border-radius: 18px;
+            }
+
+            .composer input {
+                padding: 11px 8px;
+            }
+
+            .composer button {
+                min-height: 42px;
+                padding: 0 15px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="chat-app">
-    <div class="header">
-        <div class="logo">S</div>
+<main class="page-shell">
+    <aside class="insight-panel" aria-label="ShopSphere assistant overview">
         <div>
+            <div class="brand-mark" aria-hidden="true">S</div>
+            <div class="kicker">Policy-aware support</div>
             <h1>ShopSphere Customer Support</h1>
-            <p><span class="status-dot"></span>AI assistant grounded in company policies</p>
+            <p>Ask about returns, shipping, refunds, exchanges, payments, and order policies. The assistant searches company knowledge before answering.</p>
+
+            <div class="trust-stack" aria-label="Assistant strengths">
+                <div class="trust-item">
+                    <div class="trust-icon" aria-hidden="true">01</div>
+                    <div>
+                        <strong>Retrieval first</strong>
+                        <span>Searches policies before composing a reply.</span>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon" aria-hidden="true">02</div>
+                    <div>
+                        <strong>Clear answers</strong>
+                        <span>Summarizes support rules in plain language.</span>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon" aria-hidden="true">03</div>
+                    <div>
+                        <strong>Always ready</strong>
+                        <span>Fast help for common shopping questions.</span>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="messages" id="messages">
-        <div class="message assistant">Hi! I can help with returns, exchanges, shipping, payments, refunds and orders. What would you like to know?</div>
-    </div>
+        <div class="side-footer">
+            <span class="pulse" aria-hidden="true"></span>
+            <span>Support knowledge base connected</span>
+        </div>
+    </aside>
 
-    <div class="quick-questions">
-        <button onclick="askQuick('Can I return a product after 20 days?')">Return after 20 days?</button>
-        <button onclick="askQuick('How long does a refund take?')">Refund time?</button>
-        <button onclick="askQuick('Can I exchange a different size?')">Exchange size?</button>
-        <button onclick="askQuick('How long is standard delivery?')">Delivery time?</button>
-    </div>
+    <section class="chat-app" aria-label="ShopSphere support chat">
+        <header class="header">
+            <div class="header-main">
+                <div class="logo" aria-hidden="true">S</div>
+                <div>
+                    <h2>ShopSphere Support</h2>
+                    <p><span class="status-dot" aria-hidden="true"></span>AI assistant grounded in company policies</p>
+                </div>
+            </div>
+            <div class="header-badge" aria-label="Retrieval augmented generation enabled">RAG enabled</div>
+        </header>
 
-    <form class="composer" id="chatForm">
-        <input id="question" placeholder="Ask about your order or our policies..." autocomplete="off" required>
-        <button id="sendButton" type="submit">Send</button>
-    </form>
-</div>
+        <div class="messages" id="messages" aria-live="polite" aria-relevant="additions">
+            <section class="welcome-card" aria-label="Welcome message">
+                <h3>How can I help today?</h3>
+                <p>Choose a common question below or ask about an order policy. I will search ShopSphere support content and return the most relevant answer.</p>
+                <div class="capabilities">
+                    <div class="capability">
+                        <strong>Returns</strong>
+                        <span>Windows, eligibility, exchanges, and refunds.</span>
+                    </div>
+                    <div class="capability">
+                        <strong>Delivery</strong>
+                        <span>Standard timelines, shipping options, and tracking.</span>
+                    </div>
+                    <div class="capability">
+                        <strong>Payments</strong>
+                        <span>Charges, refund timing, and payment support.</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="message-row assistant">
+                <div class="avatar assistant-avatar" aria-hidden="true">AI</div>
+                <div class="message assistant">Hi! I can help with returns, exchanges, shipping, payments, refunds and orders. What would you like to know?</div>
+            </div>
+        </div>
+
+        <div class="quick-questions" aria-label="Quick questions">
+            <button type="button" onclick="askQuick('Can I return a product after 20 days?')">Return after 20 days?</button>
+            <button type="button" onclick="askQuick('How long does a refund take?')">Refund time?</button>
+            <button type="button" onclick="askQuick('Can I exchange a different size?')">Exchange size?</button>
+            <button type="button" onclick="askQuick('How long is standard delivery?')">Delivery time?</button>
+        </div>
+
+        <form class="composer" id="chatForm">
+            <div class="composer-inner">
+                <div class="input-wrap">
+                    <label class="visually-hidden" for="question">Ask a support question</label>
+                    <input id="question" placeholder="Ask about your order or our policies..." autocomplete="off" required>
+                </div>
+                <button id="sendButton" type="submit">Send</button>
+            </div>
+            <p class="composer-note">Answers come from ShopSphere policy retrieval. Avoid sharing sensitive payment details in chat.</p>
+        </form>
+    </section>
+</main>
 
 <script>
     const form = document.getElementById('chatForm');
@@ -239,12 +780,28 @@
     }
 
     function addMessage(text, className) {
+        const row = document.createElement('div');
+        const isUser = className.includes('user');
+        const isAssistant = className.includes('assistant');
+
+        row.className = 'message-row ' + (isUser ? 'user' : 'assistant');
+
+        if (isAssistant) {
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar assistant-avatar';
+            avatar.setAttribute('aria-hidden', 'true');
+            avatar.textContent = 'AI';
+            row.appendChild(avatar);
+        }
+
         const div = document.createElement('div');
         div.className = 'message ' + className;
         div.textContent = text;
-        messages.appendChild(div);
+        row.appendChild(div);
+
+        messages.appendChild(row);
         messages.scrollTop = messages.scrollHeight;
-        return div;
+        return row;
     }
 </script>
 </body>
